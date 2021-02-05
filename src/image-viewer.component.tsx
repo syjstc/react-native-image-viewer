@@ -16,6 +16,8 @@ import {
   ViewStyle
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
+// @ts-ignore
+import ImageSize from 'react-native-image-size'
 import styles from './image-viewer.style';
 import { IImageInfo, IImageSize, Props, State } from './image-viewer.type';
 
@@ -194,7 +196,7 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
-    Image.getSize(
+    ImageSize.getSize(
       image.url,
       (width: number, height: number) => {
         imageStatus.width = width;
@@ -461,12 +463,6 @@ export default class ImageViewer extends React.Component<Props, State> {
         height *= widthPixel;
       }
 
-      // 如果此时高度还大于屏幕高度,整体缩放到高度是屏幕高度
-      if (height > screenHeight) {
-        const HeightPixel = screenHeight / height;
-        width *= HeightPixel;
-        height *= HeightPixel;
-      }
 
       const Wrapper = ({ children, ...others }: any) => (
         <ImageZoom
@@ -559,6 +555,7 @@ export default class ImageViewer extends React.Component<Props, State> {
               doubleClickInterval={this.props.doubleClickInterval}
               minScale={this.props.minScale}
               maxScale={this.props.maxScale}
+	      enableCenterFocus={false}
             >
               {this!.props!.renderImage!(image.props)}
             </ImageZoom>
@@ -588,7 +585,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
     return (
       <Animated.View style={{ zIndex: 9 }}>
-        <Animated.View style={{ ...this.styles.container, opacity: this.fadeAnim }}>
+        <Animated.View style={{ ...this.styles.container, opacity: this.fadeAnim } as any}>
           {this!.props!.renderHeader!(this.state.currentShowIndex)}
 
           <View style={this.styles.arrowLeftContainer}>
@@ -608,7 +605,7 @@ export default class ImageViewer extends React.Component<Props, State> {
               ...this.styles.moveBox,
               transform: [{ translateX: this.positionX }],
               width: this.width * this.props.imageUrls.length
-            }}
+            } as any}
           >
             {ImageElements}
           </Animated.View>
